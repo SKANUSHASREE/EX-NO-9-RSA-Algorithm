@@ -36,13 +36,64 @@ Step 5: **Security Foundation
 The security of RSA relies on the difficulty of factoring large numbers; thus, choosing sufficiently large prime numbers for \( p \) and \( q \) is crucial for security.
 
 ## Program:
+```
+#include <stdio.h>
+#include <math.h>
 
+int gcd(int a, int b) {
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+}
 
+long long modExp(long long base, long long exp, long long mod) {
+    long long result = 1;
+    for (int i = 0; i < exp; i++)
+        result = (result * base) % mod;
+    return result;
+}
 
+int main() {
+    int p, q, n, phi, e, d = 0;
+    long long msg, c, m;
+
+    printf("Enter two prime numbers (p and q): ");
+    scanf("%d %d", &p, &q);
+
+    n = p * q;
+    phi = (p - 1) * (q - 1);
+
+    for (e = 2; e < phi; e++) {
+        if (gcd(e, phi) == 1)
+            break;
+    }
+
+    for (int i = 1; i < phi; i++) {
+        if ((i * e) % phi == 1) {
+            d = i;
+            break;
+        }
+    }
+
+    printf("Public Key: {%d, %d}\n", e, n);
+    printf("Private Key: {%d, %d}\n", d, n);
+
+    printf("Enter message (number) to encrypt: ");
+    scanf("%lld", &msg);
+
+    c = modExp(msg, e, n);
+    printf("Encrypted message: %lld\n", c);
+
+    m = modExp(c, d, n);
+    printf("Decrypted message: %lld\n", m);
+
+    return 0;
+}
+```
 
 ## Output:
 
-
+<img width="580" height="414" alt="image" src="https://github.com/user-attachments/assets/f67f9e3d-4f9e-4c63-aca7-a173daec87a6" />
 
 ## Result:
  The program is executed successfully.
